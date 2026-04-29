@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+
+# JSON data files (except package files)
+*.json
+!package.json
+!package-lock.json
+
+# Bot tokens and session data
+bot-token.json
+session-db.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+coverage/
+
+# Sisyphus
+.sisyphus/
