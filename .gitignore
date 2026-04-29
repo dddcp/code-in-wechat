@@ -12,10 +12,11 @@ dist/
 # Database files
 *.db
 
-# JSON data files (except package files)
+# JSON data files (except config and package files)
 *.json
 !package.json
 !package-lock.json
+!tsconfig.json
 
 # Bot tokens and session data
 bot-token.json
