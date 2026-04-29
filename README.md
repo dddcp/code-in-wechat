@@ -72,7 +72,7 @@ bun run build && bun run start
 - 发送 `/help` 查看可用命令
 - 发送图片、文件，AI 可以分析内容
 
-![示例对话](docs/images/example.jpg)
+<img src="docs/images/example.jpg" alt="示例对话" width="320" />
 
 ### 斜杠命令
 
