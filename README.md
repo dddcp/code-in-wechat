@@ -46,9 +46,12 @@ bun install
 cp .env.example .env
 ```
 
-最少只需配置一行：
+最少只需配置：
 
 ```env
+# opencode中可以使用的模型
+OPENCODE_MODEL=xxx
+# 项目路径
 OPENCODE_DIRECTORY=/path/to/your/project
 ```
 
