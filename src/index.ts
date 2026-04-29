@@ -195,6 +195,7 @@ async function main(): Promise<void> {
     port: config.opencode.port,
     hostname: config.opencode.hostname,
     model: config.opencode.model,
+    directory: config.opencode.directory,
   });
 
   // Step 7: Create StreamHandler

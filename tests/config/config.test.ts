@@ -7,6 +7,7 @@ const ENV_KEYS = [
   "OPENCODE_PORT",
   "OPENCODE_HOSTNAME",
   "OPENCODE_MODEL",
+  "OPENCODE_DIRECTORY",
   "SERVER_PORT",
   "SERVER_HOST",
   "LOG_LEVEL",
@@ -28,6 +29,7 @@ test("valid config loads with defaults", async () => {
     // dotenv.config() runs on import and may set OPENCODE_MODEL from .env.
     // Clear it AFTER import so loadConfig() reads the cleared value.
     delete process.env.OPENCODE_MODEL;
+    delete process.env.OPENCODE_DIRECTORY;
 
     const config: AppConfig = loadConfig();
 
@@ -37,6 +39,7 @@ test("valid config loads with defaults", async () => {
     expect(config.opencode.hostname).toBe("127.0.0.1");
     // model should be undefined when OPENCODE_MODEL env var is cleared
     expect(config.opencode.model).toBeUndefined();
+    expect(config.opencode.directory).toBeUndefined();
     expect(config.server.port).toBe(3000);
     expect(config.server.host).toBe("localhost");
     expect(config.logging.level).toBe("info");
@@ -49,6 +52,7 @@ test("valid config loads with defaults", async () => {
     process.env.OPENCODE_PORT = "5000";
     process.env.OPENCODE_HOSTNAME = "0.0.0.0";
     process.env.OPENCODE_MODEL = "gpt-4";
+    process.env.OPENCODE_DIRECTORY = "/custom/project";
     process.env.SERVER_PORT = "8080";
     process.env.SERVER_HOST = "0.0.0.0";
     process.env.LOG_LEVEL = "debug";
@@ -62,6 +66,7 @@ test("valid config loads with defaults", async () => {
     expect(config.opencode.port).toBe(5000);
     expect(config.opencode.hostname).toBe("0.0.0.0");
     expect(config.opencode.model).toBe("gpt-4");
+    expect(config.opencode.directory).toBe("/custom/project");
     expect(config.server.port).toBe(8080);
     expect(config.server.host).toBe("0.0.0.0");
     expect(config.logging.level).toBe("debug");
@@ -79,5 +84,16 @@ test("valid config loads with defaults", async () => {
 
     const { loadConfig } = await import("@/config/index");
     expect(() => loadConfig()).toThrow();
+  });
+
+  test("empty OPENCODE_DIRECTORY treated as unset", async () => {
+    process.env.SESSION_DB_PATH = "./session-db.json";
+    process.env.OPENCODE_DIRECTORY = "";
+
+    const { loadConfig } = await import("@/config/index");
+    delete process.env.OPENCODE_MODEL;
+    const config: AppConfig = loadConfig();
+
+    expect(config.opencode.directory).toBeUndefined();
   });
 });

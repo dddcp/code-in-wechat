@@ -13,6 +13,7 @@ export function loadConfig(): AppConfig {
       port: process.env.OPENCODE_PORT,
       hostname: process.env.OPENCODE_HOSTNAME,
       model: process.env.OPENCODE_MODEL,
+      directory: process.env.OPENCODE_DIRECTORY,
     },
     server: {
       port: process.env.SERVER_PORT,

@@ -24,6 +24,10 @@ export const openCodeConfigSchema = z.object({
     (val) => (val === "" || val === undefined ? undefined : val),
     z.string().optional()
   ),
+  directory: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : val),
+    z.string().optional()
+  ),
 });
 
 export const serverConfigSchema = z.object({

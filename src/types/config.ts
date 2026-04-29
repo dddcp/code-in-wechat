@@ -15,6 +15,7 @@ export interface OpenCodeConfig {
   port: number;
   hostname: string;
   model: string;
+  directory?: string;
 }
 
 export interface ServerConfig {

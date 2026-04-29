@@ -59,6 +59,7 @@ Environment variables:
   OPENCODE_PORT           OpenCode server port
   OPENCODE_HOSTNAME       OpenCode server hostname
   OPENCODE_MODEL          OpenCode model (format: provider/model)
+  OPENCODE_DIRECTORY      OpenCode project directory (absolute path recommended)
   LOG_LEVEL               Log level
   ILINK_BASE_URL          iLink API base URL
   BOT_TOKEN_PATH          Path to bot token file
