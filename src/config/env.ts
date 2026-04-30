@@ -24,7 +24,21 @@ export const openCodeConfigSchema = z.object({
     (val) => (val === "" || val === undefined ? undefined : val),
     z.string().optional()
   ),
-  directory: z.preprocess(
+});
+
+export const claudeConfigSchema = z.object({
+  settingsPath: z
+    .string()
+    .min(1, "CLAUDE_SETTINGS_PATH is required when not using default")
+    .default("~/.claude/settings.json"),
+});
+
+export const toolConfigSchema = z.object({
+  defaultTool: z.preprocess(
+    (val) => (val === "" || val === undefined ? "opencode" : val),
+    z.string()
+  ),
+  workspaceDir: z.preprocess(
     (val) => (val === "" || val === undefined ? undefined : val),
     z.string().optional()
   ),
@@ -51,6 +65,8 @@ export const loggingConfigSchema = z.object({
 export const appConfigSchema = z.object({
   ilink: iLinkConfigSchema,
   opencode: openCodeConfigSchema,
+  claude: claudeConfigSchema,
+  tool: toolConfigSchema,
   server: serverConfigSchema,
   logging: loggingConfigSchema,
   session_db_path: z

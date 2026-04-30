@@ -13,6 +13,7 @@
     "start": "bun dist/index.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.1",
     "@opencode-ai/sdk": "latest",
     "dotenv": "^16.4.5",
     "hono": "^4.4.8",

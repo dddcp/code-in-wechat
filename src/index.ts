@@ -20,6 +20,8 @@ import { parseArgs, getHelpText, getVersion, type ParsedArgs, type ParseError } 
 import { loadConfig, type AppConfig } from "@/config/index";
 import { iLinkClient } from "@/wechat/ilink-client";
 import { OpenCodeAdapter } from "@/tools/opencode";
+import { ClaudeAdapter } from "@/tools/claude";
+import { SwitchableAdapter } from "@/tools/switchable";
 import { StreamHandler } from "@/bridge/stream-handler";
 import { MediaHandler } from "@/bridge/media-handler";
 import { AuthFlow } from "@/bridge/auth-flow";
@@ -62,6 +64,8 @@ function mergeConfig(config: AppConfig, args: ParsedArgs): AppConfig {
       ...config.opencode,
       ...(args.opencodePort !== undefined ? { port: args.opencodePort } : {}),
     },
+    claude: config.claude,
+    tool: config.tool,
     server: {
       ...config.server,
       ...(args.port !== undefined ? { port: args.port } : {}),
@@ -190,13 +194,22 @@ async function main(): Promise<void> {
     bot_token: botToken,
   });
 
-  // Step 6: Create OpenCodeAdapter (ToolAdapter)
-  const toolAdapter = new OpenCodeAdapter({
+  // Step 6: Create tool adapters
+  const adapters = new Map<string, import("@/tools/adapter").ToolAdapter>();
+
+  adapters.set("opencode", new OpenCodeAdapter({
     port: config.opencode.port,
     hostname: config.opencode.hostname,
     model: config.opencode.model,
-    directory: config.opencode.directory,
-  });
+    directory: config.tool.workspaceDir,
+  }));
+
+  adapters.set("claude", new ClaudeAdapter({
+    settingsPath: config.claude.settingsPath,
+    workspaceDir: config.tool.workspaceDir,
+  }));
+
+  const toolAdapter = new SwitchableAdapter(adapters, config.tool.defaultTool);
 
   // Step 7: Create StreamHandler
   const streamHandler = new StreamHandler(client);

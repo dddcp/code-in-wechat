@@ -3,6 +3,8 @@
  * Detects messages starting with "/" and routes them to handlers.
  */
 
+import type { SwitchableAdapter } from '@/tools/switchable';
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -22,6 +24,7 @@ export interface CommandResult {
 export interface CommandContext {
   sessionId?: string;
   currentTool?: string;
+  toolAdapter?: SwitchableAdapter;
 }
 
 // ---------------------------------------------------------------------------
@@ -105,9 +108,31 @@ export async function executeCommand(
     }
 
     case 'switch': {
+      if (!_context.toolAdapter) {
+        return {
+          success: false,
+          message: 'Tool switching is not available',
+        };
+      }
+
+      const toolName = command.args.trim().toLowerCase();
+      const adapter = _context.toolAdapter;
+
+      // No argument: show current tool and available options
+      if (!toolName) {
+        const current = adapter.getCurrentTool();
+        const available = adapter.getAvailableTools().join(', ');
+        return {
+          success: true,
+          message: `当前工具: ${current}\n可用工具: ${available}\n用法: /switch <工具名>`,
+        };
+      }
+
+      // Switch to specified tool
+      const result = adapter.switchTo(toolName);
       return {
-        success: false,
-        message: 'Tool switching coming soon',
+        success: result.success,
+        message: result.message,
       };
     }
 

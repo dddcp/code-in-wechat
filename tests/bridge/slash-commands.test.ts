@@ -139,13 +139,13 @@ describe('executeCommand', () => {
     expect(result.message).toBe('Session reset');
   });
 
-  test('/switch returns coming soon stub', async () => {
+  test('/switch without toolAdapter returns not available', async () => {
     const result = await executeCommand(
       { name: 'switch', args: 'opencode', rawText: '/switch opencode' },
       emptyContext,
     );
     expect(result.success).toBe(false);
-    expect(result.message).toBe('Tool switching coming soon');
+    expect(result.message).toBe('Tool switching is not available');
   });
 
   test('/help returns success with help text', async () => {
