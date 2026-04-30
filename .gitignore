@@ -41,3 +41,8 @@ coverage/
 
 # Sisyphus
 .sisyphus/
+
+openspec
+
+.claude
+.opencode
