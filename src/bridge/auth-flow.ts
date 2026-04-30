@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, promises as fs } from "node:fs";
 import path from "node:path";
+import qrcode from "qrcode-terminal";
 import type { iLinkClient } from "../wechat/ilink-client.js";
 import type { iLinkQRCodeResponse, iLinkQRCodeStatusResponse } from "../wechat/types.js";
 import { NetworkError } from "../wechat/types.js";
@@ -24,7 +25,9 @@ export interface AuthResult {
 }
 
 export interface QRCodeDisplayData {
+  /** QR session ID (used for polling status, not a URL) */
   qrcode: string;
+  /** Full URL for the QR code login page */
   qrcodeImgContent: string;
 }
 
@@ -47,8 +50,11 @@ export interface AuthFlowConfig {
 // ---------------------------------------------------------------------------
 
 function terminalDisplayer(data: QRCodeDisplayData): void {
-  console.log(`\n📱 Scan QR code to login:\n${data.qrcodeImgContent}\n`);
-  console.log(`Or open: ${data.qrcode}\n`);
+  console.log(`\n📱 Scan QR code to login:\n`);
+  qrcode.generate(data.qrcodeImgContent, { small: true }, (output: string) => {
+    console.log(output);
+  });
+  console.log(`\n Or open: ${data.qrcodeImgContent}\n`);
 }
 
 // ---------------------------------------------------------------------------
