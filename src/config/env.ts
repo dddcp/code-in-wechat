@@ -33,6 +33,13 @@ export const claudeConfigSchema = z.object({
     .default("~/.claude/settings.json"),
 });
 
+export const codexConfigSchema = z.object({
+  codexPath: z
+    .string()
+    .min(1, "CODEX_PATH is required when not using default")
+    .default("codex"),
+});
+
 export const toolConfigSchema = z.object({
   defaultTool: z.preprocess(
     (val) => (val === "" || val === undefined ? "opencode" : val),
@@ -66,6 +73,7 @@ export const appConfigSchema = z.object({
   ilink: iLinkConfigSchema,
   opencode: openCodeConfigSchema,
   claude: claudeConfigSchema,
+  codex: codexConfigSchema,
   tool: toolConfigSchema,
   server: serverConfigSchema,
   logging: loggingConfigSchema,

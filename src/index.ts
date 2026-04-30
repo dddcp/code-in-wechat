@@ -21,6 +21,7 @@ import { loadConfig, type AppConfig } from "@/config/index";
 import { iLinkClient } from "@/wechat/ilink-client";
 import { OpenCodeAdapter } from "@/tools/opencode";
 import { ClaudeAdapter } from "@/tools/claude";
+import { CodexAdapter } from "@/tools/codex";
 import { SwitchableAdapter } from "@/tools/switchable";
 import { StreamHandler } from "@/bridge/stream-handler";
 import { MediaHandler } from "@/bridge/media-handler";
@@ -65,6 +66,7 @@ function mergeConfig(config: AppConfig, args: ParsedArgs): AppConfig {
       ...(args.opencodePort !== undefined ? { port: args.opencodePort } : {}),
     },
     claude: config.claude,
+    codex: config.codex,
     tool: config.tool,
     server: {
       ...config.server,
@@ -206,6 +208,11 @@ async function main(): Promise<void> {
 
   adapters.set("claude", new ClaudeAdapter({
     settingsPath: config.claude.settingsPath,
+    workspaceDir: config.tool.workspaceDir,
+  }));
+
+  adapters.set("codex", new CodexAdapter({
+    codexPath: config.codex.codexPath,
     workspaceDir: config.tool.workspaceDir,
   }));
 
