@@ -52,8 +52,8 @@ cp .env.example .env
 最少只需配置：
 
 ```env
-# OpenCode 可用的模型，格式为：provider/model，可以在`~/.config/opencode/opencode.json`找一下
-OPENCODE_MODEL=xxx
+# OpenCode 可用的模型，可以在`~/.config/opencode/opencode.json`找一下，如：opencode-go/kimi-k2.6
+OPENCODE_MODEL=provider/model
 # 项目路径（OpenCode 和 Claude 共用）
 WORK_SPACE_DIR=/path/to/your/project
 ```
