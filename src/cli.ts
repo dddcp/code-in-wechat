@@ -59,11 +59,21 @@ Environment variables:
   OPENCODE_PORT           OpenCode server port
   OPENCODE_HOSTNAME       OpenCode server hostname
   OPENCODE_MODEL          OpenCode model (format: provider/model)
-  OPENCODE_DIRECTORY      OpenCode project directory (absolute path recommended)
+  WORK_SPACE_DIR          Project directory for AI tools (shared by all adapters)
   LOG_LEVEL               Log level
   ILINK_BASE_URL          iLink API base URL
   BOT_TOKEN_PATH          Path to bot token file
   SESSION_DB_PATH         Path to session database file
+  DEFAULT_TOOL            Default tool: opencode | claude (default: opencode)
+  CLAUDE_SETTINGS_PATH    Path to Claude settings.json (default: ~/.claude/settings.json)
+
+Slash commands (in WeChat):
+  /help                   Show available commands
+  /new                    Start a new conversation
+  /reset                  Reset current session
+  /switch                 Show current tool and available options
+  /switch claude          Switch to Claude API
+  /switch opencode        Switch to OpenCode
 `.trim();
 
 // ---------------------------------------------------------------------------

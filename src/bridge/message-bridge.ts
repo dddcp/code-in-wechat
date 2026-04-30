@@ -353,11 +353,15 @@ export class MessageBridge implements StatusProvider {
    * Handle a slash command by executing it and sending the result.
    */
   private async handleSlashCommand(cmd: SlashCommand, msg: WeChatMessage): Promise<void> {
+    const { SwitchableAdapter } = await import("@/tools/switchable");
     const context: import("@/bridge/slash-commands").CommandContext = {
       sessionId: this.sessionManager.getContextToken(msg.from_user_id)
         ? undefined
-        : undefined, // Will be populated when session management is fully wired
+        : undefined,
       currentTool: this.toolAdapter.name,
+      toolAdapter: this.toolAdapter instanceof SwitchableAdapter
+        ? this.toolAdapter as import("@/tools/switchable").SwitchableAdapter
+        : undefined,
     };
 
     const result: CommandResult = await executeCommand(cmd, context);

@@ -10,6 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/lang-TypeScript-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![OpenCode](https://img.shields.io/badge/powered%20by-OpenCode-orange)](https://github.com/opencode-ai/opencode)
+[![Claude](https://img.shields.io/badge/powered%20by-Claude-purple)](https://www.anthropic.com/claude)
 
 </div>
 
@@ -19,6 +20,7 @@
 
 - 🤖 **微信原生交互** — 无需安装额外 App，微信扫码即可使用
 - 💻 **AI 编码助手** — 写代码、调试问题、处理文件
+- 🔄 **多引擎支持** — 支持 OpenCode 和 Claude API，微信内一键切换
 - 📎 **多媒体支持** — 发送图片、文件、语音给 AI 分析
 - ⚡ **实时流式响应** — AI 回复实时推送，支持打字指示器
 - 🔄 **自动重连** — 守护进程模式，会话过期自动重新认证
@@ -49,11 +51,13 @@ cp .env.example .env
 最少只需配置：
 
 ```env
-# opencode中可以使用的模型
+# OpenCode 可用的模型
 OPENCODE_MODEL=xxx
-# 项目路径
-OPENCODE_DIRECTORY=/path/to/your/project
+# 项目路径（OpenCode 和 Claude 共用）
+WORK_SPACE_DIR=/path/to/your/project
 ```
+
+使用 Claude API 需要先安装并登录 [Claude CLI](https://docs.anthropic.com/en/docs/claude-code)，配置会自动从 `~/.claude/settings.json` 读取。
 
 ### 启动
 
@@ -83,6 +87,9 @@ bun run build && bun run start
 |------|------|
 | `/new [标题]` | 开启新对话 |
 | `/reset` | 重置当前会话 |
+| `/switch` | 查看当前工具和可用选项 |
+| `/switch claude` | 切换到 Claude API |
+| `/switch opencode` | 切换到 OpenCode |
 | `/help` | 显示帮助 |
 
 ## ⚙️ 配置项
@@ -90,7 +97,10 @@ bun run build && bun run start
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
 | `SESSION_DB_PATH` | — | **必填**，会话数据存储路径 |
-| `OPENCODE_MODEL` | — | AI 模型，格式 `provider/model` |
+| `WORK_SPACE_DIR` | — | 项目工作目录（所有 AI 工具共用） |
+| `OPENCODE_MODEL` | — | OpenCode 模型，格式 `provider/model` |
+| `DEFAULT_TOOL` | `opencode` | 默认 AI 工具：`opencode` 或 `claude` |
+| `CLAUDE_SETTINGS_PATH` | `~/.claude/settings.json` | Claude 配置文件路径 |
 | `SERVER_PORT` | `3000` | Web 状态页端口 |
 | `LOG_LEVEL` | `info` | 日志级别 |
 

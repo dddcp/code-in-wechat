@@ -13,7 +13,13 @@ export function loadConfig(): AppConfig {
       port: process.env.OPENCODE_PORT,
       hostname: process.env.OPENCODE_HOSTNAME,
       model: process.env.OPENCODE_MODEL,
-      directory: process.env.OPENCODE_DIRECTORY,
+    },
+    claude: {
+      settingsPath: process.env.CLAUDE_SETTINGS_PATH,
+    },
+    tool: {
+      defaultTool: process.env.DEFAULT_TOOL,
+      workspaceDir: process.env.WORK_SPACE_DIR,
     },
     server: {
       port: process.env.SERVER_PORT,
