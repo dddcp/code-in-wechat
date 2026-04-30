@@ -17,6 +17,9 @@ export function loadConfig(): AppConfig {
     claude: {
       settingsPath: process.env.CLAUDE_SETTINGS_PATH,
     },
+    codex: {
+      codexPath: process.env.CODEX_PATH,
+    },
     tool: {
       defaultTool: process.env.DEFAULT_TOOL,
       workspaceDir: process.env.WORK_SPACE_DIR,
