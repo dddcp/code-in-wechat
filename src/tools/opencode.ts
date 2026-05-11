@@ -330,12 +330,14 @@ export class OpenCodeAdapter implements ToolAdapter {
     });
 
     // Step 4: Collect streaming events as they arrive
+    let hasSeenActivity = false;
     try {
       for await (const event of eventStream.stream) {
         const payload = event as Event;
-        logger.debug("Stream event received", { type: payload.type });
+        logger.info("Stream event received", { type: payload.type, sessionId });
 
         if (payload.type === 'message.part.updated') {
+          hasSeenActivity = true;
           const partEvent = payload as EventMessagePartUpdated;
           const part = partEvent.properties.part;
 
@@ -356,13 +358,17 @@ export class OpenCodeAdapter implements ToolAdapter {
         } else if (payload.type === 'session.idle') {
           const idleEvent = payload as EventSessionIdle;
           if (idleEvent.properties.sessionID === sessionId) {
+            if (!hasSeenActivity) {
+              logger.info("Skipping stale session.idle (no activity yet)", { sessionId });
+              continue;
+            }
             onChunk({ type: 'done' });
             logger.info("OpenCode stream completed", { sessionId });
-            // Wait for prompt to complete before returning
             await promptPromise;
             return;
           }
         } else if (payload.type === 'session.error') {
+          hasSeenActivity = true;
           const errorEvent = payload as EventSessionError;
           onChunk({
             type: 'error',
@@ -379,6 +385,27 @@ export class OpenCodeAdapter implements ToolAdapter {
         error: err instanceof Error ? err.message : 'Stream error',
       });
       logger.error("OpenCode stream error", { sessionId, error: err instanceof Error ? { message: err.message, stack: err.stack } : String(err) });
+    }
+
+    // Step 5: Fallback — if SSE stream ended without delivering content,
+    // wait for the prompt response directly and extract text from it.
+    // This handles cases where the SSE connection closes prematurely
+    // (e.g. SDK/server version mismatch, stale events).
+    if (!hasSeenActivity) {
+      logger.info("SSE stream ended without activity, falling back to prompt response", { sessionId });
+      try {
+        const result = await promptPromise as any;
+        if (result?.data) {
+          const response = result.data as { parts: Part[] };
+          const text = extractText(response.parts);
+          if (text) {
+            onChunk({ type: 'text', text });
+          }
+        }
+      } catch (err) {
+        logger.warn("Fallback prompt result error (already reported via chunk)", { sessionId, error: err instanceof Error ? err.message : String(err) });
+      }
+      onChunk({ type: 'done' });
     }
   }
 
